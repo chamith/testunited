@@ -1,0 +1,63 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.5.RELEASE'
+	id 'java'
+	id 'com.palantir.docker' version '0.22.1'
+	id 'jacoco'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+def companyName = "testunited"
+def projectName = "testunited"
+group = 'org.${companyName}'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	runtimeOnly 'org.apache.derby:derby'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.2'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+    	exclude group: 'junit', module: 'junit' //by both name and group
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.3"
+    reportsDir = file("$buildDir/jacoco")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
+}
+docker {
+    name "localhost:32000/${companyName}/${projectName}-${bootJar.baseName}:latest"
+    println("Doker Image: ${companyName}/${projectName}-${bootJar.baseName}")
+    files jar.archivePath
+    copySpec.from("build/libs").into(".")
+    buildArgs(['JAR_FILE': "${bootJar.baseName}-${bootJar.version}.jar"])
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task kubeDeploy (group:"Kubernetes", description: "Deploys the docker image to the local kubernetes instance", type: Exec){
+	commandLine 'kubectl', 'apply', '-f', 'deployment.yml'
+}
+
+task runJar(group: "Run", description: "Runs the Jar built by the 'build' task", type: JavaExec) {
+    dependsOn = [build, test]
+    main = "-jar";
+    args jar.archivePath
+}

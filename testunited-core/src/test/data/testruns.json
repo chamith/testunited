@@ -1,9 +1,9 @@
 [
 	{
-		"testCase":{
+		"testCase": {
 			"id": "0bc86112-2d7e-4136-a95a-aab3ff7f3846"
-			},
-		"timeStamp":"2019-06-01T20:07:15.000",
+		},
+		"timeStamp": "2019-06-01T20:07:15.000",
 		"session": "my_testing_session",
 		"result": false
 	}

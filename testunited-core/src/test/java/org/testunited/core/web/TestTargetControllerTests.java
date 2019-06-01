@@ -61,7 +61,7 @@ public class TestTargetControllerTests {
 
 	@Test
 	public void testHello() throws Exception {
-		this.mockMvc.perform(get("/hello")).andExpect(status().isOk()).andExpect(content().string("hello"));
+		this.mockMvc.perform(get("/testtargets/hello")).andExpect(status().isOk()).andExpect(content().string("hello"));
 	}
 
 	@Test

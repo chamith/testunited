@@ -31,22 +31,27 @@ public class TestCaseController {
 		return "hello";
 	}
 	@GetMapping("/testtargets/{testTargetId}/testcases")
-	public ArrayList<TestCase> getByTestTargetId(@PathVariable long testTargetId){
+	public List<TestCase> getByTestTargetId(@PathVariable long testTargetId){
 		return this.testCaseService.getByTestTargetId(testTargetId);
 	}
 
 	@GetMapping("/testtargets/{testTargetId}/testgroups/{testGroupId}/testcases")
-	public ArrayList<TestCase> getByTestTargetIdAndTesGroupId(@PathVariable long testTargetId,
+	public List<TestCase> getByTestTargetIdAndTesGroupId(@PathVariable long testTargetId,
 			@PathVariable long testGroupId){
 		return this.testCaseService.getByTestTargetIdTestGroupId(testTargetId, testGroupId);
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping("/testcases/{id}")
 	public ResponseEntity<TestCase> getById(@PathVariable UUID id){
 		var target = this.testCaseService.getById(id);
 		if (target == null)
 			return new ResponseEntity<TestCase>(HttpStatus.NOT_FOUND);
 		return new ResponseEntity<TestCase>(target, HttpStatus.OK);
+	}
+
+	@GetMapping("/testcases")
+	public List<TestCase> getAll(){
+		return this.testCaseService.getAll();
 	}
 	
 	@PostMapping("/testcases")

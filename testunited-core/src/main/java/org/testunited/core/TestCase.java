@@ -12,7 +12,9 @@ public class TestCase {
 	
 	@Id
 	@GeneratedValue
+	@org.hibernate.annotations.Type(type="uuid-char")
 	private UUID id;
+	
 	private String name;
 	private String description;
 	
@@ -24,7 +26,11 @@ public class TestCase {
 
 	public TestCase() {
 	}
-	
+
+	public TestCase(UUID id) {
+		super();
+		this.id = id;
+	}
 	public TestCase(String name, String description, long testTargetId, long testGroupId) {
 		super();
 		this.name = name;

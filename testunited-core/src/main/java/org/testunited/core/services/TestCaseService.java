@@ -1,6 +1,7 @@
 package org.testunited.core.services;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,18 @@ public class TestCaseService {
 		this.testCaseRepo.save(testGroup);
 	}
 	
-	public ArrayList<TestCase> getByTestTargetId(long id) {
-		return (ArrayList<TestCase>) testCaseRepo.findByTestTargetId(id);
+	public List<TestCase> getByTestTargetId(long id) {
+		return testCaseRepo.findByTestTargetId(id);
 	}
-	public ArrayList<TestCase> getByTestTargetIdTestGroupId(long testTargetId, long testGroupId) {
-		return (ArrayList<TestCase>) testCaseRepo.findByTestTargetIdAndTestGroupId(testTargetId, testGroupId);
+	public List<TestCase> getByTestTargetIdTestGroupId(long testTargetId, long testGroupId) {
+		return testCaseRepo.findByTestTargetIdAndTestGroupId(testTargetId, testGroupId);
 	}
 	public TestCase getById(UUID id) {
 		return this.testCaseRepo.findById(id).get();
+	}
+	
+	public List<TestCase> getAll(){
+		return (List<TestCase>)this.testCaseRepo.findAll();
 	}
 	
 }

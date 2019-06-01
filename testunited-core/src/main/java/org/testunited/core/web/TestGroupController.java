@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.testunited.core.TestGroup;
@@ -44,8 +45,7 @@ public class TestGroupController {
 		return new ResponseEntity<TestGroup>(target, HttpStatus.OK);
 	}
 	
-	@PostMapping
-	@PutMapping
+	@RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
 	@ResponseStatus(HttpStatus.CREATED)
 	public TestGroup save(@Valid @RequestBody TestGroup testGroup) {
 		this.testGroupService.save(testGroup);

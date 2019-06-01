@@ -6,7 +6,7 @@ import javax.persistence.*;
 public class TestTarget {
 
 	@Id
-	@GeneratedValue
+	//@GeneratedValue
 	private long id;
 
 	private String microservice;

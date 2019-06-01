@@ -7,7 +7,7 @@ import javax.persistence.Id;
 @Entity
 public class TestGroup {
 	@Id
-	@GeneratedValue
+	//@GeneratedValue
 	private long id;
 
 	private String name;

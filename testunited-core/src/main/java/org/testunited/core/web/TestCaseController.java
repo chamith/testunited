@@ -1,6 +1,7 @@
 package org.testunited.core.web;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -48,6 +49,13 @@ public class TestCaseController {
 		return new ResponseEntity<TestCase>(target, HttpStatus.OK);
 	}
 	
+	@PostMapping("/testcases")
+	@ResponseStatus(HttpStatus.CREATED)
+	public TestCase save(@Valid @RequestBody TestCase testCase) {
+		this.testCaseService.save(testCase);
+		return testCase;
+	}
+	
 	@PostMapping("/testtargets/{testTargetId}/testgroups/{testGroupId}/testcases")
 	@ResponseStatus(HttpStatus.CREATED)
 	public TestCase save(@PathVariable long testTargetId, 
@@ -59,4 +67,11 @@ public class TestCaseController {
 		return testCase;
 	}
 	
+	@PostMapping("/testcases/bulk")
+	@ResponseStatus(HttpStatus.CREATED)
+	public List<TestCase> save(@RequestBody List<TestCase> testCases) {
+		for(TestCase testCase: testCases)
+			this.testCaseService.save(testCase);
+		return testCases;
+	}
 }

@@ -1,0 +1,32 @@
+[
+	{
+		"id": 101,
+		"microservice": "booktitle",
+		"path": "/booktitles",
+		"method": "GET"
+	},
+	{
+		"id": 102,
+		"microservice": "booktitle",
+		"path": "/booktitles/ID",
+		"method": "GET"
+	},
+	{
+		"id": 103,
+		"microservice": "booktitle",
+		"path": "/booktitles",
+		"method": "POST"
+	},
+	{
+		"id": 104,
+		"microservice": "booktitle",
+		"path": "/booktitles/ID",
+		"method": "PUT"
+	},
+	{
+		"id": 105,
+		"microservice": "booktitle",
+		"path": "/booktitles/ID",
+		"method": "DELETE"
+	}
+]

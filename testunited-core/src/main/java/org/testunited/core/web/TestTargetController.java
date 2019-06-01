@@ -1,6 +1,7 @@
 package org.testunited.core.web;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -48,6 +49,14 @@ public class TestTargetController {
 	public TestTarget save(@Valid @RequestBody TestTarget testTarget) {
 		this.testTargetService.save(testTarget);
 		return testTarget;
+	}
+	
+	@PostMapping("/bulk")
+	@ResponseStatus(HttpStatus.CREATED)
+	public List<TestTarget> saveMany(@RequestBody List<TestTarget> testTargets) {
+		for(TestTarget testTarget: testTargets)
+			this.testTargetService.save(testTarget);
+		return testTargets;
 	}
 	
 }

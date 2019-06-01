@@ -1,6 +1,7 @@
 package org.testunited.core.web;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.testunited.core.TestGroup;
+import org.testunited.core.TestTarget;
 import org.testunited.core.services.TestGroupService;
 
 @RestController
@@ -48,6 +50,14 @@ public class TestGroupController {
 	public TestGroup save(@Valid @RequestBody TestGroup testGroup) {
 		this.testGroupService.save(testGroup);
 		return testGroup;
+	}
+	
+	@PostMapping("/bulk")
+	@ResponseStatus(HttpStatus.CREATED)
+	public List<TestGroup> saveMany(@RequestBody List<TestGroup> testGroups) {
+		for(TestGroup testGroup: testGroups)
+			this.testGroupService.save(testGroup);
+		return testGroups;
 	}
 	
 }

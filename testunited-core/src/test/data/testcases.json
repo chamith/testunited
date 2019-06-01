@@ -1,0 +1,22 @@
+[
+	{
+		"name": "get_all",
+		"description": "get all and validate the status code",
+		"testTarget": {
+			"id": 101
+		},
+		"testGroup": {
+			"id": 201
+		}
+	},
+	{
+		"name": "get_all_with_nonInteger_id",
+		"description": "get all and validate the status code",
+		"testTarget": {
+			"id": 101
+		},
+		"testGroup": {
+			"id": 201
+		}
+	}
+]

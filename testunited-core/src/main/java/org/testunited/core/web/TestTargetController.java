@@ -2,6 +2,7 @@ package org.testunited.core.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -37,7 +38,7 @@ public class TestTargetController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<TestTarget> getById(@PathVariable long id){
+	public ResponseEntity<TestTarget> getById(@PathVariable UUID id){
 		var target = this.testTargetService.getById(id);
 		if (target == null)
 			return new ResponseEntity<TestTarget>(HttpStatus.NOT_FOUND);

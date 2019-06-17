@@ -12,6 +12,7 @@ plugins {
 	id 'java'
 	id 'com.palantir.docker' version '0.22.1'
 	id 'jacoco'
+    id 'maven-publish'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -50,8 +51,8 @@ jacocoTestReport {
     }
 }
 docker {
-    name "localhost:32000/${companyName}/${projectName}-${bootJar.baseName}:latest"
-    println("Doker Image: ${companyName}/${projectName}-${bootJar.baseName}")
+    name "${companyName}/${bootJar.baseName}:latest"
+    println("Doker Image: ${companyName}/${bootJar.baseName}")
     files jar.archivePath
     copySpec.from("build/libs").into(".")
     buildArgs(['JAR_FILE': "${bootJar.baseName}-${bootJar.version}.jar"])

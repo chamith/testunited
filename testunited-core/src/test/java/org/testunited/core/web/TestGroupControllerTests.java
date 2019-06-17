@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.hamcrest.Matchers;
 import org.mockito.InjectMocks;
@@ -40,8 +41,8 @@ public class TestGroupControllerTests {
 			"    \"name\"asdfaf \"my_test_group_2\"\n"+ 
 			"}";
 
-	private final TestGroup testTarget1 = new TestGroup(1, "my_test_group_1");
-	private final TestGroup testTarget2 = new TestGroup(2, "my_test_group_2");
+	private final TestGroup testTarget1 = new TestGroup(UUID.fromString("672124b6-9894-11e5-be38-001d42e813fe"), "my_test_group_1");
+	private final TestGroup testTarget2 = new TestGroup(UUID.fromString("672124b6-9894-11e5-be38-001d42e813fe"), "my_test_group_2");
 
 	private final ArrayList<TestGroup> testTargetList = new ArrayList<TestGroup>();
 
@@ -64,7 +65,7 @@ public class TestGroupControllerTests {
 
 	@Test
 	public void testGetById() throws Exception {
-		when(serviceMock.getById(1)).thenReturn(this.testTarget1);
+		when(serviceMock.getById(UUID.fromString("672124b6-9894-11e5-be38-001d42e813fe"))).thenReturn(this.testTarget1);
 
 		this.mockMvc.perform(get("/testgroups/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.id", Matchers.is(1)))
@@ -73,7 +74,7 @@ public class TestGroupControllerTests {
 	
 	@Test
 	public void testGetById_nonExistantId() throws Exception {
-		when(serviceMock.getById(1)).thenReturn(null);
+		when(serviceMock.getById(UUID.fromString("672124b6-9894-11e5-be38-001d42e813fe"))).thenReturn(null);
 
 		this.mockMvc.perform(get("/testgroups/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
 	}

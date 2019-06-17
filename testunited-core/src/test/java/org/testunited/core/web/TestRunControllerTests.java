@@ -52,8 +52,8 @@ public class TestRunControllerTests {
 			"    \"name\"asdfaf \"my_test_group_2\"\n"+ 
 			"}";
 
-	private final TestRun testRun1 = new TestRun(new TestCase(UUID.fromString("3d50454f-0ba1-455b-8311-c7195c92e296")), new Date(), true, "my_test_session");
-	private final TestGroup testTarget2 = new TestGroup(2, "my_test_group_2");
+	private final TestRun testRun1 = new TestRun(new TestCase(UUID.fromString("3d50454f-0ba1-455b-8311-c7195c92e296")), new Date(), true, "mysession", null);
+	private final TestGroup testTarget2 = new TestGroup(UUID.fromString("672124b6-9894-11e5-be38-001d42e813fe"), "my_test_group_2");
 
 	private final ArrayList<TestGroup> testTargetList = new ArrayList<TestGroup>();
 

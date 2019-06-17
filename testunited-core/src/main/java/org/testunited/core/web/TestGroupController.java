@@ -2,6 +2,7 @@ package org.testunited.core.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -38,7 +39,7 @@ public class TestGroupController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<TestGroup> getById(@PathVariable long id){
+	public ResponseEntity<TestGroup> getById(@PathVariable UUID id){
 		var target = this.testGroupService.getById(id);
 		if (target == null)
 			return new ResponseEntity<TestGroup>(HttpStatus.NOT_FOUND);

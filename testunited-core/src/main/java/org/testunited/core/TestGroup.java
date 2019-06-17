@@ -1,16 +1,20 @@
 package org.testunited.core;
 
+import java.util.UUID;
+
 import javax.persistence.*;
 
 @Entity
 public class TestGroup {
 	@Id
-	//@GeneratedValue
-	private long id;
+	@GeneratedValue
+	@org.hibernate.annotations.Type(type="uuid-char")
+	private UUID id;
+
 
 	private String name;
 
-	public TestGroup(long id, String name) {
+	public TestGroup(UUID id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -23,10 +27,10 @@ public class TestGroup {
 
 	public TestGroup() {
 	}
-	public TestGroup(long id) {
+	public TestGroup(UUID id) {
 		this.id = id;
 	}
-	public long getId() {
+	public UUID getId() {
 		return id;
 	}
 
@@ -34,7 +38,7 @@ public class TestGroup {
 		return name;
 	}
 
-	public void setId(long id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

@@ -1,6 +1,7 @@
 package org.testunited.core.services;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class TestTargetService {
 		return (ArrayList<TestTarget>) testTargetRepo.findAll();
 	}
 	
-	public TestTarget getById(long id) {
+	public TestTarget getById(UUID id) {
 		return this.testTargetRepo.findById(id).get();
 	}
 	

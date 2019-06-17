@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.hamcrest.Matchers;
 import org.mockito.InjectMocks;
@@ -42,8 +43,8 @@ public class TestTargetControllerTests {
 			"    \"method\": \"POST\"\n" + 
 			"}";
 
-	private final TestTarget testTarget1 = new TestTarget(1, "test_ms_1", "/", "GET");
-	private final TestTarget testTarget2 = new TestTarget(2, "test_ms_2", "/items", "POST");
+	private final TestTarget testTarget1 = new TestTarget(UUID.fromString("672124b6-9894-11e5-be38-001d42e813fe"), "test_ms_1", "/", "GET");
+	private final TestTarget testTarget2 = new TestTarget(UUID.fromString("672124b6-9894-11e5-be38-001d42e813fe"), "test_ms_2", "/items", "POST");
 
 	private final ArrayList<TestTarget> testTargetList = new ArrayList<TestTarget>();
 
@@ -66,7 +67,7 @@ public class TestTargetControllerTests {
 
 	@Test
 	public void testGetById() throws Exception {
-		when(serviceMock.getById(1)).thenReturn(this.testTarget1);
+		when(serviceMock.getById(UUID.fromString("672124b6-9894-11e5-be38-001d42e813fe"))).thenReturn(this.testTarget1);
 
 		this.mockMvc.perform(get("/testtargets/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.id", Matchers.is(1)))
@@ -77,7 +78,7 @@ public class TestTargetControllerTests {
 	
 	@Test
 	public void testGetById_nonExistantId() throws Exception {
-		when(serviceMock.getById(1)).thenReturn(null);
+		when(serviceMock.getById(UUID.fromString("672124b6-9894-11e5-be38-001d42e813fe"))).thenReturn(null);
 
 		this.mockMvc.perform(get("/testtargets/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
 	}

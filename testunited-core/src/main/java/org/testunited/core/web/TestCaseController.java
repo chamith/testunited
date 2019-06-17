@@ -31,13 +31,13 @@ public class TestCaseController {
 		return "hello";
 	}
 	@GetMapping("/testtargets/{testTargetId}/testcases")
-	public List<TestCase> getByTestTargetId(@PathVariable long testTargetId){
+	public List<TestCase> getByTestTargetId(@PathVariable UUID testTargetId){
 		return this.testCaseService.getByTestTargetId(testTargetId);
 	}
 
 	@GetMapping("/testtargets/{testTargetId}/testgroups/{testGroupId}/testcases")
-	public List<TestCase> getByTestTargetIdAndTesGroupId(@PathVariable long testTargetId,
-			@PathVariable long testGroupId){
+	public List<TestCase> getByTestTargetIdAndTesGroupId(@PathVariable UUID testTargetId,
+			@PathVariable UUID testGroupId){
 		return this.testCaseService.getByTestTargetIdTestGroupId(testTargetId, testGroupId);
 	}
 	
@@ -63,8 +63,8 @@ public class TestCaseController {
 	
 	@PostMapping("/testtargets/{testTargetId}/testgroups/{testGroupId}/testcases")
 	@ResponseStatus(HttpStatus.CREATED)
-	public TestCase save(@PathVariable long testTargetId, 
-			@PathVariable long testGroupId, 
+	public TestCase save(@PathVariable UUID testTargetId, 
+			@PathVariable UUID testGroupId, 
 			@Valid @RequestBody TestCase testCase) {
 		testCase.setTestGroup(new TestGroup(testGroupId));
 		testCase.setTestTarget(new TestTarget(testTargetId));

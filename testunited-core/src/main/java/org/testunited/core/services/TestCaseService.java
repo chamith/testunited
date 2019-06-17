@@ -19,14 +19,18 @@ public class TestCaseService {
 		this.testCaseRepo.save(testGroup);
 	}
 	
-	public List<TestCase> getByTestTargetId(long id) {
+	public List<TestCase> getByTestTargetId(UUID id) {
 		return testCaseRepo.findByTestTargetId(id);
 	}
-	public List<TestCase> getByTestTargetIdTestGroupId(long testTargetId, long testGroupId) {
+	public List<TestCase> getByTestTargetIdTestGroupId(UUID testTargetId, UUID testGroupId) {
 		return testCaseRepo.findByTestTargetIdAndTestGroupId(testTargetId, testGroupId);
 	}
 	public TestCase getById(UUID id) {
 		return this.testCaseRepo.findById(id).get();
+	}
+	
+	public TestCase getByTestSourceId(String sourceId) {
+		return testCaseRepo.findByTestSourceId(sourceId);
 	}
 	
 	public List<TestCase> getAll(){

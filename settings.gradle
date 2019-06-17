@@ -1,0 +1,3 @@
+rootProject.name = 'testunited'
+include 'testunited-api'
+include 'testunited-core'

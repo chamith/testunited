@@ -11,31 +11,34 @@ public class TestRun {
 	@Id
 	@GeneratedValue
 	@org.hibernate.annotations.Type(type="uuid-char")
-	private UUID uuid;
+	private UUID id;
 	
 	@ManyToOne
 	private TestCase testCase;
 	private Date timeStamp;
 	private boolean result;
+	private String reason;
 	private String session;
 
 	public TestRun() {
 	}
 
-	public TestRun(TestCase testCase, Date timeStamp, boolean result, String session) {
+	public TestRun(TestCase testCase, Date timeStamp, boolean result, String reason, String session) {
 		super();
 		this.testCase = testCase;
 		this.timeStamp = timeStamp;
 		this.result = result;
+		this.reason = reason;
 		this.session = session;
 	}
 
-	public TestRun(TestCase testCase, Date timeStamp, boolean result, UUID uuid, String session) {
+	public TestRun(UUID id, TestCase testCase, Date timeStamp, boolean result, String reason, String session) {
 		super();
 		this.testCase = testCase;
 		this.timeStamp = timeStamp;
 		this.result = result;
-		this.uuid = uuid;
+		this.id = id;
+		this.reason = reason;
 		this.session = session;
 	}
 
@@ -49,10 +52,6 @@ public class TestRun {
 
 	public Date getTimeStamp() {
 		return timeStamp;
-	}
-
-	public UUID getUuid() {
-		return uuid;
 	}
 
 	public boolean isResult() {
@@ -75,7 +74,19 @@ public class TestRun {
 		this.timeStamp = timeStamp;
 	}
 
+	public UUID getId() {
+		return id;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
 	public void setUuid(UUID uuid) {
-		this.uuid = uuid;
+		this.id = uuid;
 	}
 }

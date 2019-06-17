@@ -1,0 +1,9 @@
+version: '3'
+services:
+  testunited-core:
+    network_mode: host
+    image: "testunited/testunited-core"
+    ports:
+      - "9001:9001"
+    environment:
+      - ENV=${ENV}

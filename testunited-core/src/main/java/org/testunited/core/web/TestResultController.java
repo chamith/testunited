@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.testunited.core.TestCase;
 import org.testunited.core.TestGroup;
+import org.testunited.core.TestResult;
 import org.testunited.core.TestRun;
 import org.testunited.core.TestTarget;
 import org.testunited.core.services.TestCaseService;
@@ -44,7 +45,15 @@ public class TestResultController {
 	@PostMapping("/testresults")
 	@ResponseStatus(HttpStatus.CREATED)
 	public TestResult save(@Valid @RequestBody TestResult testResult) {
-		//this.testRunService.save(testResult);
+		System.out.println(testResult.toString());
+		TestCase testCase = testCaseService.getByTestSourceId(testResult.getTestSourceId());
+		if(testCase == null) {
+			testCase = new TestCase(testResult.getTestSourceId(), testResult.getTestSourceId(), null);
+			this.testCaseService.save(testCase);
+		}
+		
+		TestRun testRun = new TestRun(testCase, testResult.getTimeStamp(), testResult.getResult(), testResult.getReason(), null);
+		this.testRunService.save(testRun);
 		return testResult;
 	}
 	
@@ -53,6 +62,8 @@ public class TestResultController {
 	public List<TestResult> save(@RequestBody List<TestResult> testResults) {
 		//for(TestResult testResult: testResults)
 		//	this.testRunService.save(testResult);
+		for(TestResult r: testResults)
+			this.save(r);
 		return testResults;
 	}
 }

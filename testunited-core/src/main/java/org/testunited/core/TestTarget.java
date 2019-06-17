@@ -1,20 +1,23 @@
 package org.testunited.core;
 
+import java.util.UUID;
+
 import javax.persistence.*;
 
 @Entity
 public class TestTarget {
 
 	@Id
-	//@GeneratedValue
-	private long id;
+	@GeneratedValue
+	@org.hibernate.annotations.Type(type="uuid-char")
+	private UUID id;
 
 	private String microservice;
 
 	private String path;
 
 	private String method;
-	public TestTarget(long id, String microservice, String path, String method) {
+	public TestTarget(UUID id, String microservice, String path, String method) {
 		super();
 		this.id = id;
 		this.microservice = microservice;
@@ -27,13 +30,13 @@ public class TestTarget {
 		this.path = path;
 		this.method = method;
 	}
-	public TestTarget(long id) {
+	public TestTarget(UUID id) {
 		this.id = id;
 	}
 	public TestTarget() {
 	}
 	
-	public long getId() {
+	public UUID getId() {
 		return id;
 	}
 
@@ -49,7 +52,7 @@ public class TestTarget {
 		return path;
 	}
 
-	public void setId(long id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

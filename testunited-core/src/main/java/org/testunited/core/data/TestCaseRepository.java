@@ -8,7 +8,8 @@ import org.testunited.core.*;
 
 public interface TestCaseRepository extends CrudRepository<TestCase, UUID> {
 
-	public List<TestCase> findByTestTargetId(long testTargetId);
-	public List<TestCase> findByTestTargetIdAndTestGroupId(long testTargetId, long testGroupId);
+	public List<TestCase> findByTestTargetId(UUID testTargetId);
+	public List<TestCase> findByTestTargetIdAndTestGroupId(UUID testTargetId, UUID testGroupId);
+	public TestCase findByTestSourceId(String testSourceId);
 
 }

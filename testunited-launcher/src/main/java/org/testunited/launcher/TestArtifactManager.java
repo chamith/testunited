@@ -36,24 +36,15 @@ public class TestArtifactManager {
 
 	private String m2LocalHome;
 	private TestBundleResolutionMode testBundleResolutionMode;
-	private ArrayList<Path> cachedArtifacts;
 	
 	public static void main(String[] args) {
 		
-		if(args.length < 2)
-		{
-			System.out.println("invalid arguments");
-			return;
-		}
-		
-		System.out.println("TEST_ARTIFACT_IDS: "+ args[0]);
-		System.out.println("MODE: "+ args[1]);
+		TestRunnerArgs testRunnerArgs = TestRunnerArgs.parse(args);
 
 		var artifactManager = new TestArtifactManager(TestBundleResolutionMode.Local);
-		var testBundles = artifactManager.getTestBundles(args[0]);
 		artifactManager.m2LocalHome = DEFAULT_LOCAL_REPOSITORY;
 		
-		artifactManager.resolveTestBundles(testBundles);
+		artifactManager.resolveTestBundles(testRunnerArgs.testBundles);
 	}
 	public TestArtifactManager() {
 		this(TestBundleResolutionMode.Classpath);
@@ -61,32 +52,7 @@ public class TestArtifactManager {
 	
 	public TestArtifactManager(TestBundleResolutionMode testBundleResolutionMode) {
 		this.testBundleResolutionMode = testBundleResolutionMode;
-		this.cachedArtifacts = new ArrayList<Path>();
 	}
-	
-	private ArrayList<TestBundle> getTestBundles(String testBundlesArg) {
-		ArrayList<TestBundle> testBundles = new ArrayList<>();
-
-		if (testBundlesArg == null | testBundlesArg.isEmpty()) {
-			System.out.println("no test bundles given");
-			return null;
-		}
-
-		String[] testBundleArray = testBundlesArg.split(";");
-
-		for (String s : testBundleArray) {
-			String[] testBundleElements = s.split(":");
-			try {
-				TestBundle testBundle = new TestBundle(testBundleElements[0], testBundleElements[1],
-						testBundleElements[2], testBundleElements[3]);
-				testBundles.add(testBundle);
-			} catch (Exception ex) {
-				System.out.println(ex.toString());
-			}
-		}
-		return testBundles;
-	}
-
 	
 	public void resolveTestBundle(TestBundle testBundle) {
 		
@@ -179,16 +145,4 @@ public class TestArtifactManager {
 		Path m2LocalHomeAbsolutePath = Paths.get(this.m2LocalHome, "repository").toAbsolutePath();
 		return new RemoteRepository.Builder("local", "default", "file:"+ m2LocalHomeAbsolutePath.toString()).build();
 	}
-	
-	public void clearCache() {
-		for(Path file: this.cachedArtifacts) {
-			try {
-				Files.deleteIfExists(file);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
 }

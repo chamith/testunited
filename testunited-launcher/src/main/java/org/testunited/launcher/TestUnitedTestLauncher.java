@@ -1,5 +1,6 @@
 package org.testunited.launcher;
 
+import org.apache.commons.math3.analysis.solvers.IllinoisSolver;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -10,9 +11,12 @@ import org.testunited.api.TestUnitedTestExecutionListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TestUnitedTestLauncher implements TestUnitedTestApplication {
+
+
 	private TestBundleResolutionMode testBundleResolutionMode;
 	
 	public TestUnitedTestLauncher() {
@@ -30,28 +34,7 @@ public class TestUnitedTestLauncher implements TestUnitedTestApplication {
 		launcher.run(args);
 	}
 
-	private ArrayList<TestBundle> getTestBundles(String testBundlesArg) {
-		ArrayList<TestBundle> testBundles = new ArrayList<>();
 
-		if (testBundlesArg == null | testBundlesArg.isEmpty()) {
-			System.out.println("no test bundles given");
-			return null;
-		}
-
-		String[] testBundleArray = testBundlesArg.split(";");
-
-		for (String s : testBundleArray) {
-			String[] testBundleElements = s.split(":");
-			try {
-				TestBundle testBundle = new TestBundle(testBundleElements[0], testBundleElements[1],
-						testBundleElements[2], testBundleElements[3]);
-				testBundles.add(testBundle);
-			} catch (Exception ex) {
-				System.out.println(ex.toString());
-			}
-		}
-		return testBundles;
-	}
 
 	private void runTests(List<TestBundle> testBundles) {
 		
@@ -79,20 +62,8 @@ public class TestUnitedTestLauncher implements TestUnitedTestApplication {
 
 	@Override
 	public void run(String... args) {
-		
-		if (args.length == 0) {
-			System.out.println("no args");
-			return;
-		}
-
-		ArrayList<TestBundle> testBundles = this.getTestBundles(args[0]);
-
-		
-		System.out.printf("Test Bundles Found: %d%n", testBundles.size());
-		for(var testBundle: testBundles) System.out.println(testBundle.toString());
-
-		
-		this.runTests(testBundles);
+		TestRunnerArgs testRunnerArgs = TestRunnerArgs.parse(args);
+		this.runTests(testRunnerArgs.testBundles);
 		//artifactManager.clearCache();
 	}
 }

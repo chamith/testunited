@@ -30,47 +30,45 @@ import org.eclipse.aether.transport.file.FileTransporterFactory;
 import org.eclipse.aether.transport.http.HttpTransporterFactory;
 
 public class TestArtifactManager {
-	public static final String DEFAULT_LOCAL_REPOSITORY = "m2";	
-	public static final String DEFAULT_LOCAL_REPOSITORY_CACHE = "m2-cache";	
+	public static final String DEFAULT_LOCAL_REPOSITORY = "m2";
+	public static final String DEFAULT_LOCAL_REPOSITORY_CACHE = "m2-cache";
 	public static final String DEFAULT_TEST_ARTIFACT_CACHE = "test-jars";
 
 	private String m2LocalHome;
 	private TestBundleResolutionMode testBundleResolutionMode;
-	
+
 	public static void main(String[] args) {
-		
+
 		TestRunnerArgs testRunnerArgs = TestRunnerArgs.parse(args);
 
-		var artifactManager = new TestArtifactManager(TestBundleResolutionMode.Local);
+		var artifactManager = new TestArtifactManager(testRunnerArgs.resolutionMode);
 		artifactManager.m2LocalHome = DEFAULT_LOCAL_REPOSITORY;
-		
 		artifactManager.resolveTestBundles(testRunnerArgs.testBundles);
 	}
+
 	public TestArtifactManager() {
 		this(TestBundleResolutionMode.Classpath);
 	}
-	
+
 	public TestArtifactManager(TestBundleResolutionMode testBundleResolutionMode) {
 		this.testBundleResolutionMode = testBundleResolutionMode;
 	}
-	
+
 	public void resolveTestBundle(TestBundle testBundle) {
-		
-		if(this.testBundleResolutionMode == TestBundleResolutionMode.Classpath)
+
+		if (this.testBundleResolutionMode == TestBundleResolutionMode.Classpath)
 			return;
-		
-		
+
 		RepositorySystem repositorySystem = getRepositorySystem();
 		RepositorySystemSession repositorySystemSession = getRepositorySystemSession(repositorySystem);
-		
+
 		Artifact artifact = new DefaultArtifact(testBundle.group, testBundle.artifact, "jar", testBundle.version);
 		ArtifactRequest artifactRequest = new ArtifactRequest();
 		artifactRequest.setArtifact(artifact);
 		artifactRequest.setRepositories(getRepositories(repositorySystem, repositorySystemSession));
 
 		try {
-			ArtifactResult artifactResult = repositorySystem.resolveArtifact(repositorySystemSession,
-					artifactRequest);
+			ArtifactResult artifactResult = repositorySystem.resolveArtifact(repositorySystemSession, artifactRequest);
 			artifact = artifactResult.getArtifact();
 			System.out.printf("artifact %s resolved to %s\n", artifact, artifact.getFile());
 
@@ -80,30 +78,27 @@ public class TestArtifactManager {
 			System.err.printf("error resolving artifact: %s\n", e.getMessage());
 		}
 	}
-	
+
 	public void resolveTestBundles(List<TestBundle> testBundles) {
-		for(var tb: testBundles) {
+		for (var tb : testBundles) {
 			this.resolveTestBundle(tb);
 		}
 	}
 
-	public void copyToCache(Artifact artifact){
-		//Path path = FileSystems.getDefault().getPath(".").toAbsolutePath();
-		//System.out.println("Working Dir: " + path.toAbsolutePath());
-		
+	public void copyToCache(Artifact artifact) {
 		Path original = Paths.get(artifact.getFile().getAbsolutePath());
-		Path copied = Paths.get(FileSystems.getDefault().getPath(this.DEFAULT_TEST_ARTIFACT_CACHE).toAbsolutePath().toString(), artifact.getFile().getName());
-		
+		Path copied = Paths.get(
+				FileSystems.getDefault().getPath(DEFAULT_TEST_ARTIFACT_CACHE).toAbsolutePath().toString(),
+				artifact.getFile().getName());
+
 		try {
-			//this.cachedArtifacts.add(Files.move(original, copied, StandardCopyOption.REPLACE_EXISTING));
-			Files.createSymbolicLink(copied, original);
-			//Files.exists(copied, LinkOption.NOFOLLOW_LINKS);
+			if (!Files.exists(copied))
+				Files.createSymbolicLink(copied, original);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	public RepositorySystem getRepositorySystem() {
 		DefaultServiceLocator serviceLocator = MavenRepositorySystemUtils.newServiceLocator();
 		serviceLocator.addService(RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class);
@@ -143,6 +138,6 @@ public class TestArtifactManager {
 
 	private RemoteRepository getLocalMavenRepository() {
 		Path m2LocalHomeAbsolutePath = Paths.get(this.m2LocalHome, "repository").toAbsolutePath();
-		return new RemoteRepository.Builder("local", "default", "file:"+ m2LocalHomeAbsolutePath.toString()).build();
+		return new RemoteRepository.Builder("local", "default", "file:" + m2LocalHomeAbsolutePath.toString()).build();
 	}
 }

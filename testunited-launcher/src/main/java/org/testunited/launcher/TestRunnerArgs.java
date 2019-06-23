@@ -9,6 +9,8 @@ List<TestBundle> testBundles;
 TestBundleResolutionMode resolutionMode;
 private static String ARG_TEST_BUNDLE_IDS = "TEST_BUNDLE_IDS";
 private static String ARG_TEST_BUNDLE_MODE = "TEST_BUNDLE_MODE";
+private static TestBundleResolutionMode DEFAULT_RESOLUTION_MODE = TestBundleResolutionMode.Classpath;
+
 public static HashMap<String, String> getArgValues(String... args) throws IllegalArgumentException{
 	HashMap<String, String> argValues = new HashMap<String, String>();
 
@@ -19,7 +21,8 @@ public static HashMap<String, String> getArgValues(String... args) throws Illega
 		argValues.put(argVal[0], argVal[1]);
 		}
 		catch(Exception ex){
-			throw new IllegalArgumentException("Invalid Arguments");
+			ex.printStackTrace();
+			return null;
 		}
 	}
 	
@@ -49,16 +52,28 @@ public static ArrayList<TestBundle> getTestBundles(String testBundlesArg) {
 	return testBundles;
 }
 
+private static TestBundleResolutionMode getResolutionMode(String resolutionArg) {
+	TestBundleResolutionMode resolutionMode;
+	
+	switch(resolutionArg.toLowerCase()) {
+	case "local":
+		resolutionMode = TestBundleResolutionMode.Local;
+		break;
+	case "remote":
+		resolutionMode = TestBundleResolutionMode.Remote;
+		break;
+		default:
+			resolutionMode = DEFAULT_RESOLUTION_MODE;
+	}
+	
+	return resolutionMode;
+}
+
 public static TestRunnerArgs parse(String... args) {
 	TestRunnerArgs testRunnerArgs = new TestRunnerArgs();
 	HashMap<String,String> argValues = null;
-
-	try {
-		argValues = getArgValues(args);
-	}
-	catch(IllegalArgumentException ex) {
 		
-	}
+	argValues = getArgValues(args);
 	
 	if(argValues == null || !argValues.containsKey(ARG_TEST_BUNDLE_IDS)) {
 		System.out.printf("Argument '%s' is missing%n", ARG_TEST_BUNDLE_IDS);
@@ -69,8 +84,8 @@ public static TestRunnerArgs parse(String... args) {
 	for(var key: argValues.keySet())System.out.printf("[%s:%s]%n",key,argValues.get(key));
 	System.out.println("---------------------------");
 
-	
 	testRunnerArgs.testBundles = getTestBundles(argValues.get(ARG_TEST_BUNDLE_IDS));
+	testRunnerArgs.resolutionMode = getResolutionMode(argValues.get(ARG_TEST_BUNDLE_MODE));
 	
 	System.out.printf("Test Bundles Found: %d%n", testRunnerArgs.testBundles.size());
 	for(var testBundle: testRunnerArgs.testBundles) System.out.println(testBundle.toString());

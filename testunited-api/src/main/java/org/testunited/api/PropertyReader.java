@@ -22,10 +22,7 @@ public class PropertyReader {
 				prop.load(inputStream);
 			} else {
 				throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-			}
- 
-			Date time = new Date(System.currentTimeMillis());
- 
+			} 
 		} catch (Exception e) {
 			System.out.println("Exception: " + e);
 		} finally {

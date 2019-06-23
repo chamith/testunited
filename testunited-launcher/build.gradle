@@ -10,10 +10,11 @@ plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
     id 'maven-publish'
+	id 'com.palantir.docker' version '0.22.1'
 }
 
-
-group 'org.testunited'
+def companyName = "testunited"
+group = 'org.${companyName}'
 version '0.0.1-SNAPSHOT'
 
 
@@ -21,8 +22,7 @@ repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     mavenLocal()
-        mavenCentral()
-    
+    mavenCentral()
     jcenter()
     
 }
@@ -33,6 +33,15 @@ publishing {
     	}
 	}
 }
+
+docker {
+    name "${companyName}/${jar.baseName}:latest"
+    println("Doker Image: ${companyName}/${jar.baseName}")
+    files jar.archivePath, 'startup.sh'
+    copySpec.from("build/libs").into(".")
+    buildArgs(['JAR_FILE': "${jar.baseName}-${jar.version}.jar"])
+}
+
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     api 'org.apache.commons:commons-math3:3.6.1'
@@ -52,12 +61,14 @@ dependencies {
     compile 'org.apache.maven:maven-aether-provider:3.3.9'
     compile 'org.apache.maven:maven-model:3.6.1'
     compile 'org.junit.jupiter:junit-jupiter-engine:5.3.2'
-    compile 'io.rest-assured:rest-assured:4.0.0'	
+    compile 'io.rest-assured:rest-assured:4.0.0'
+    compile 'org.testunited:testunited-api:0.0.1-SNAPSHOT'	
+    
 }
 
 jar {
   	manifest {
-    	attributes 'Main-Class': 'org.testunited.api.TestUnitedTestLauncher'
+    	attributes 'Main-Class': 'org.testunited.launcher.TestUnitedTestLauncher'
   	}
   	from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }

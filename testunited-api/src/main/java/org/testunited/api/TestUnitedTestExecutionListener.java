@@ -63,13 +63,13 @@ public class TestUnitedTestExecutionListener implements TestExecutionListener {
 		StringBuilder payloadBuilder = new StringBuilder();
 		payloadBuilder.append("[");
 
-		for (TestResult r : this.tests) {
-			payloadBuilder.append(r.toString());
-			payloadBuilder.append(",");
+		for(int i=0;i< this.tests.size();i++) {
+			payloadBuilder.append(this.tests.get(i));
+			
+			if(i < this.tests.size() - 1)
+				payloadBuilder.append(",");
 		}
 
-		int trailingComma = payloadBuilder.lastIndexOf(",");
-		payloadBuilder.deleteCharAt(trailingComma);
 		payloadBuilder.append("]");
 
 		HttpClient httpclient = HttpClients.createDefault();

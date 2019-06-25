@@ -20,6 +20,7 @@ import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
 import org.eclipse.aether.impl.DefaultServiceLocator;
+import org.eclipse.aether.repository.Authentication;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.resolution.ArtifactRequest;
@@ -28,12 +29,13 @@ import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
 import org.eclipse.aether.spi.connector.transport.TransporterFactory;
 import org.eclipse.aether.transport.file.FileTransporterFactory;
 import org.eclipse.aether.transport.http.HttpTransporterFactory;
+import org.eclipse.aether.util.repository.AuthenticationBuilder;
 
 public class TestArtifactManager {
 	public static final String DEFAULT_LOCAL_REPOSITORY = "m2";
 	public static final String DEFAULT_LOCAL_REPOSITORY_CACHE = "m2-cache";
 	public static final String DEFAULT_TEST_ARTIFACT_CACHE = "test-jars";
-
+	private List<RemoteRepository> remoteRepos;
 	private String m2LocalHome;
 	private TestBundleResolutionMode testBundleResolutionMode;
 
@@ -43,7 +45,10 @@ public class TestArtifactManager {
 
 		var artifactManager = new TestArtifactManager(testRunnerArgs.resolutionMode);
 		artifactManager.m2LocalHome = DEFAULT_LOCAL_REPOSITORY;
+		artifactManager.addRemoteRepository("deps", "default", "https://repo.deps.co/chamithsri/snapshots", 
+				"DEPS6HOT54LRQDKB2EYR", "xIMkoIxBZUyA355BMp6VoD5J7406E9ROM_n7KhEo");
 		artifactManager.resolveTestBundles(testRunnerArgs.testBundles);
+
 	}
 
 	public TestArtifactManager() {
@@ -52,6 +57,7 @@ public class TestArtifactManager {
 
 	public TestArtifactManager(TestBundleResolutionMode testBundleResolutionMode) {
 		this.testBundleResolutionMode = testBundleResolutionMode;
+		this.remoteRepos = new ArrayList<RemoteRepository>();
 	}
 
 	public void resolveTestBundle(TestBundle testBundle) {
@@ -79,6 +85,13 @@ public class TestArtifactManager {
 		}
 	}
 
+	public void addRemoteRepository(String name, String type, String url, String userName, String password) {
+		Authentication auth = new AuthenticationBuilder().addUsername(userName).addPassword(password).build();
+        RemoteRepository nexus =
+            new RemoteRepository.Builder(name, type, url ).setAuthentication( auth ).build();
+        this.remoteRepos.add(nexus);
+	}
+	
 	public void resolveTestBundles(List<TestBundle> testBundles) {
 		for (var tb : testBundles) {
 			this.resolveTestBundle(tb);
@@ -129,7 +142,12 @@ public class TestArtifactManager {
 	}
 
 	public List<RemoteRepository> getRepositories(RepositorySystem system, RepositorySystemSession session) {
-		return Arrays.asList(getCentralMavenRepository(), getLocalMavenRepository());
+		List<RemoteRepository> repos = new ArrayList<RemoteRepository>();
+		if(this.testBundleResolutionMode == TestBundleResolutionMode.Local)
+			repos.add(getLocalMavenRepository());
+		else if (this.testBundleResolutionMode == TestBundleResolutionMode.Remote)
+			repos.addAll(remoteRepos);
+		return repos;
 	}
 
 	private RemoteRepository getCentralMavenRepository() {

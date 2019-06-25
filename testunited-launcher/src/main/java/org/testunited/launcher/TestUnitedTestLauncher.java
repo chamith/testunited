@@ -1,6 +1,5 @@
 package org.testunited.launcher;
 
-import org.apache.commons.math3.analysis.solvers.IllinoisSolver;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -11,7 +10,6 @@ import org.testunited.api.TestUnitedTestExecutionListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class TestUnitedTestLauncher implements TestUnitedTestApplication {
@@ -44,6 +42,7 @@ public class TestUnitedTestLauncher implements TestUnitedTestApplication {
 	@Override
 	public void run(String... args) {
 		TestRunnerArgs testRunnerArgs = TestRunnerArgs.parse(args);
+		System.setProperty("env", testRunnerArgs.environment);
 		this.runTests(testRunnerArgs.testBundles);
 	}
 }

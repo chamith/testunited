@@ -62,20 +62,9 @@ dependencies {
     implementation 'org.apache.maven:maven-aether-provider:3.3.9'
     implementation 'org.apache.maven:maven-model:3.6.1'
     implementation 'org.junit.jupiter:junit-jupiter-engine:5.3.2'
-    implementation 'io.rest-assured:rest-assured:4.0.0'	
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'io.rest-assured:rest-assured:4.0.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
+    
 }
 
-jar {
-  	manifest {
-    	attributes 'Main-Class': 'org.testunited.api.TestUnitedTestLauncher'
-  	}
-  	from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-}
-
-task runJar(group: "Run", description: "Runs the Jar built by the 'build' task", type: JavaExec) {
-    dependsOn = [build, test]
-    main = "-jar";
-    args jar.archivePath
-}

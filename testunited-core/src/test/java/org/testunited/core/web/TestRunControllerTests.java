@@ -20,6 +20,7 @@ import org.testunited.core.TestRun;
 import org.testunited.core.TestTarget;
 import org.testunited.core.data.TestTargetRepository;
 import org.testunited.core.services.TestGroupService;
+import org.testunited.core.services.TestRunService;
 import org.testunited.core.services.TestTargetService;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -35,20 +36,19 @@ import java.util.Date;
 import java.util.UUID;
 @SpringBootTest
 @TestInstance(Lifecycle.PER_CLASS)
-@Tag("microservice:booktitle")
 public class TestRunControllerTests {
 
 	private MockMvc mockMvc;
 
 	private final String jsonSingleTestGroupGood = 
 			"{\n" + 
-			"    \"id\": 1,\n" + 
+			"    \"id\": \"672124b6-9894-11e5-be38-001d42e813fe\",\n" + 
 			"    \"name\": \"my_test_group_1\"\n"+ 
 			"}";
 
 	private final String jsonSingleTestGroupBad = 
 			"{\n" + 
-			"    \"id\": 1,\n" + 
+			"    \"id\": \"672124b6-9894-11e5-be38-001d42e813fe\",\n" + 
 			"    \"name\"asdfaf \"my_test_group_2\"\n"+ 
 			"}";
 
@@ -58,10 +58,10 @@ public class TestRunControllerTests {
 	private final ArrayList<TestGroup> testTargetList = new ArrayList<TestGroup>();
 
 	@InjectMocks
-	private TestGroupController controller;
+	private TestRunController controller;
 
 	@Mock
-	private TestGroupService serviceMock;
+	private TestRunService serviceMock;
 
 	@BeforeAll
 	public void setUp() throws Exception {
@@ -69,11 +69,6 @@ public class TestRunControllerTests {
 		ObjectMapper testRunObjectMapper = new ObjectMapper();
 		String testRunJson = testRunObjectMapper.writeValueAsString(this.testRun1);
 		System.out.println(testRunJson);
-	}
-
-	@Test
-	public void testHello() throws Exception {
-		this.mockMvc.perform(get("/testruns/hello")).andExpect(status().isOk()).andExpect(content().string("hello"));
 	}
 
 //	@Test

@@ -13,19 +13,35 @@ plugins {
 	id 'com.palantir.docker' version '0.22.1'
 	id 'jacoco'
     id 'maven-publish'
+	id 'com.adarshr.test-logger' version '1.7.0'	
 }
 
 apply plugin: 'io.spring.dependency-management'
 
-def companyName = "testunited"
-def projectName = "testunited"
-group = 'org.${companyName}'
+group = 'org.testunited'
 version = '0.0.1-SNAPSHOT'
 
 repositories {
 	mavenCentral()
 }
 
+publishing {
+	publications {
+    	mavenJava(MavenPublication) {
+        	from components.java
+    	}
+	}
+	repositories {
+	    maven {
+	        name "snapshots"
+	        url "https://repo.deps.co/chamithsri/snapshots"
+	        credentials {
+	            username "$depsKey"
+	            password "$depsSecret"
+	        }
+	    }
+    }
+}
 dependencies {
     compile 'mysql:mysql-connector-java'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -51,8 +67,8 @@ jacocoTestReport {
     }
 }
 docker {
-    name "${companyName}/${bootJar.baseName}:latest"
-    println("Doker Image: ${companyName}/${bootJar.baseName}")
+    name "testunited/${bootJar.baseName}:latest"
+    println("Doker Image: testunited/${bootJar.baseName}")
     files jar.archivePath
     copySpec.from("build/libs").into(".")
     buildArgs(['JAR_FILE': "${bootJar.baseName}-${bootJar.version}.jar"])

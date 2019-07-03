@@ -28,10 +28,6 @@ public class TestRunController {
 	@Autowired
 	TestRunService testRunService;
 	
-	@GetMapping("/testruns/hello")
-	public String sayHello() {
-		return "hello";
-	}
 	@GetMapping("/testcases/{testCaseId}/testruns")
 	public List<TestRun> getByTestCaseId(@PathVariable UUID testCaseId){
 		return this.testRunService.getByTestCaseId(testCaseId);

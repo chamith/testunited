@@ -17,6 +17,10 @@ import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 public class TestUnitedTestExecutionListener implements TestExecutionListener {
 	
 	List<TestResult> tests = new ArrayList<TestResult>();
@@ -61,22 +65,42 @@ public class TestUnitedTestExecutionListener implements TestExecutionListener {
 	public void testPlanExecutionFinished(TestPlan testPlan) {
 
 		StringBuilder payloadBuilder = new StringBuilder();
-		payloadBuilder.append("[");
+//		payloadBuilder.append("[");
+//
+//		for(int i=0;i< this.tests.size();i++) {
+//			payloadBuilder.append(this.tests.get(i).toJson());
+//			
+//			if(i < this.tests.size() - 1)
+//				payloadBuilder.append(",");
+//		}
+//
+//		payloadBuilder.append("]");
+		ObjectMapper mapper = new ObjectMapper();
 
-		for(int i=0;i< this.tests.size();i++) {
-			payloadBuilder.append(this.tests.get(i));
-			
-			if(i < this.tests.size() - 1)
-				payloadBuilder.append(",");
+		try {
+			payloadBuilder.append(mapper.writeValueAsString(this.tests));
+		} catch (JsonProcessingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-
-		payloadBuilder.append("]");
 
 		HttpClient httpclient = HttpClients.createDefault();
 		String payload = payloadBuilder.toString();
 		StringEntity requestEntity = new StringEntity(payload, ContentType.APPLICATION_JSON);
+		
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-		System.out.println(payload);
+		try {
+			String formattedPayload = mapper.writeValueAsString(this.tests);
+			System.out.println("----------TESTUNITED PAYLOAD------------");
+			System.out.println(formattedPayload);
+			System.out.println("----------------------------------------");
+			
+		} catch (JsonProcessingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		HttpPost postMethod = new HttpPost(PropertyReader.getPropValue("testunited.service.url") + "/testresults/bulk");
 		postMethod.setEntity(requestEntity);

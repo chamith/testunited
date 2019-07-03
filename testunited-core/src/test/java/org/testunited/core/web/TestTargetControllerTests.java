@@ -29,7 +29,7 @@ public class TestTargetControllerTests {
 
 	private final String jsonSingleTestTargetGood = 
 			"{\n" + 
-			"    \"id\": 1,\n" + 
+			"    \"id\": \"672124b6-9894-11e5-be38-001d42e813fe\",\n" + 
 			"    \"microservice\": \"test_ms_1\",\n"+ 
 			"    \"path\": \"/\",\n" + 
 			"    \"method\": \"GET\"\n" + 
@@ -37,7 +37,7 @@ public class TestTargetControllerTests {
 
 	private final String jsonSingleTestTargetBad = 
 			"{\n" + 
-			"    \"id\": 2,\n" + 
+			"    \"id\": \"672124b6-9894-11e5-be38-001d42e813fe\",\n" + 
 			"    \"microservice\": \"test_ms_2\",\n"+ 
 			"    \"path\": \"/items\"\n" + 
 			"    \"method\": \"POST\"\n" + 
@@ -61,16 +61,11 @@ public class TestTargetControllerTests {
 	}
 
 	@Test
-	public void testHello() throws Exception {
-		this.mockMvc.perform(get("/testtargets/hello")).andExpect(status().isOk()).andExpect(content().string("hello"));
-	}
-
-	@Test
 	public void testGetById() throws Exception {
 		when(serviceMock.getById(UUID.fromString("672124b6-9894-11e5-be38-001d42e813fe"))).thenReturn(this.testTarget1);
 
-		this.mockMvc.perform(get("/testtargets/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.id", Matchers.is(1)))
+		this.mockMvc.perform(get("/testtargets/672124b6-9894-11e5-be38-001d42e813fe").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id", Matchers.is("672124b6-9894-11e5-be38-001d42e813fe")))
 				.andExpect(jsonPath("$.microservice", Matchers.is("test_ms_1")))
 				.andExpect(jsonPath("$.path", Matchers.is("/")))
 				.andExpect(jsonPath("$.method", Matchers.is("GET")));
@@ -80,7 +75,7 @@ public class TestTargetControllerTests {
 	public void testGetById_nonExistantId() throws Exception {
 		when(serviceMock.getById(UUID.fromString("672124b6-9894-11e5-be38-001d42e813fe"))).thenReturn(null);
 
-		this.mockMvc.perform(get("/testtargets/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+		this.mockMvc.perform(get("/testtargets/672124b6-9894-11e5-be38-001d42e813fe").accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
 	}
 	
 	@Test

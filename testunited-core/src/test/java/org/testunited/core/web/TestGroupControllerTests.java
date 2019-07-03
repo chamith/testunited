@@ -31,13 +31,13 @@ public class TestGroupControllerTests {
 
 	private final String jsonSingleTestGroupGood = 
 			"{\n" + 
-			"    \"id\": 1,\n" + 
+			"    \"id\": \"672124b6-9894-11e5-be38-001d42e813fe\",\n" + 
 			"    \"name\": \"my_test_group_1\"\n"+ 
 			"}";
 
 	private final String jsonSingleTestGroupBad = 
 			"{\n" + 
-			"    \"id\": 1,\n" + 
+			"    \"id\": \"672124b6-9894-11e5-be38-001d42e813fe\",\n" + 
 			"    \"name\"asdfaf \"my_test_group_2\"\n"+ 
 			"}";
 
@@ -67,8 +67,8 @@ public class TestGroupControllerTests {
 	public void testGetById() throws Exception {
 		when(serviceMock.getById(UUID.fromString("672124b6-9894-11e5-be38-001d42e813fe"))).thenReturn(this.testTarget1);
 
-		this.mockMvc.perform(get("/testgroups/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.id", Matchers.is(1)))
+		this.mockMvc.perform(get("/testgroups/672124b6-9894-11e5-be38-001d42e813fe").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id", Matchers.is("672124b6-9894-11e5-be38-001d42e813fe")))
 				.andExpect(jsonPath("$.name", Matchers.is("my_test_group_1")));
 	}
 	
@@ -76,7 +76,7 @@ public class TestGroupControllerTests {
 	public void testGetById_nonExistantId() throws Exception {
 		when(serviceMock.getById(UUID.fromString("672124b6-9894-11e5-be38-001d42e813fe"))).thenReturn(null);
 
-		this.mockMvc.perform(get("/testgroups/1").accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+		this.mockMvc.perform(get("/testgroups/672124b6-9894-11e5-be38-001d42e813fe").accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
 	}
 	
 	@Test

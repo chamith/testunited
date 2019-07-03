@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class TestRunnerArgs {
+	private static Logger logger = LoggerFactory.getLogger(TestRunnerArgs.class);
 
 	List<TestBundle> testBundles;
 	TestBundleResolutionMode resolutionMode;
@@ -38,7 +42,7 @@ public class TestRunnerArgs {
 		ArrayList<TestBundle> testBundles = new ArrayList<>();
 
 		if (testBundlesArg == null | testBundlesArg.isEmpty()) {
-			System.out.println("no test bundles given");
+			logger.info("no test bundles given");
 			return null;
 		}
 
@@ -51,7 +55,7 @@ public class TestRunnerArgs {
 						testBundleElements[2], testBundleElements[3]);
 				testBundles.add(testBundle);
 			} catch (Exception ex) {
-				System.out.println(ex.toString());
+				logger.error("Error parsing the test bundles {}", s, ex);
 			}
 		}
 		return testBundles;
@@ -85,22 +89,23 @@ public class TestRunnerArgs {
 		argValues = getArgValues(args);
 
 		if (argValues == null || !argValues.containsKey(ARG_TEST_BUNDLE_IDS)) {
-			System.out.printf("Argument '%s' is missing%n", ARG_TEST_BUNDLE_IDS);
+			logger.info("Argument '{}' is missing", ARG_TEST_BUNDLE_IDS);
 			return null;
 		}
 
-		System.out.println("---------arguments---------");
+		logger.info("---------arguments---------");
 		for (var key : argValues.keySet())
-			System.out.printf("[%s:%s]%n", key, argValues.get(key));
-		System.out.println("---------------------------");
+			logger.info("[{}:{}]", key, argValues.get(key));
+		logger.info("---------------------------");
 
 		testRunnerArgs.testBundles = getTestBundles(argValues.get(ARG_TEST_BUNDLE_IDS));
 		testRunnerArgs.resolutionMode = getResolutionMode(argValues.get(ARG_TEST_BUNDLE_MODE));
 		testRunnerArgs.environment = getEnv(argValues.get(ARG_ENV));
 
-		System.out.printf("Test Bundles Found: %d%n", testRunnerArgs.testBundles.size());
+		logger.info("--------TEST BUNDLES---------");
 		for (var testBundle : testRunnerArgs.testBundles)
-			System.out.println(testBundle.toString());
+			logger.info(">{}",testBundle.toString());
+		logger.info("Total: {}", testRunnerArgs.testBundles.size());
 
 		return testRunnerArgs;
 	}
